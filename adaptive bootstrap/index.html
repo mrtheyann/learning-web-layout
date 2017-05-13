@@ -5,24 +5,76 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/style.css" class="style">
 </head>
 <body>
 
     <div id="page-wrapper">
 
+      <div id="heading">
+        <div class="container-fluid">
+            <h1>LoremCars</h1>
+        </div>
+      </div>
+
+      <nav class="navbar navbar-light bg-faded">
+          <div class="container-fluid">
+                  <ul class="nav navbar-nav">
+                      <li class="nav-item active">
+                        <a href="#" class="nav link">Home <span class="sr-only">(current)</span></a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="#" class="nav link">Features</a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="#" class="nav link">Pricing</a>
+                      </li>
+                      <li class="nav-item">
+                        <a href="#" class="nav link">About</a>
+                      </li>
+                  </ul>
+                  <form class="form-inline navbar-form pull-right">
+                    <input type="text" class="form-control" placeholder="Search">
+                    <button class="btn btn-success-outline" type="submit">Search</button>
+                  </form>
+              </div>
+          </nav>
+
       <div class="container-fluid">
-        <div class="col-md-4">
-          <img src="http://loremflickr.com/768/432/cars?random=1" alt="" class="so">
-        </div>
-        <div class="col-md-4">
-          <img src="http://loremflickr.com/768/432/cars?random=2" alt="" class="so">
-        </div>
-        <div class="col-md-4">
-          <img src="http://loremflickr.com/768/432/cars?random=3" alt="" class="so">
+
+        <div class="row">
+          <div class="col-md-6  text-center col-lg-4">
+            <img src="http://loremflickr.com/768/432/cars?random=1" alt="" class="so">
+            <h2>Section #1</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi placeat eveniet distinctio, nihil, illo recusandae dignissimos dolor natus nulla dolores, beatae quod voluptate quae ducimus adipisci culpa provident. Tenetur, iusto.</p>
+          </div>
+          <div class="col-md-6 text-center col-lg-4">
+            <img src="http://loremflickr.com/768/432/cars?random=2" alt="" class="so">
+            <h2>Section #2</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic esse repudiandae dolore qui, iusto illum sint quo. Dolor tempore autem perspiciatis assumenda, quasi nostrum maiores quaerat odit saepe aliquam illo?</p>
+          </div>
+          <div class="col-md-12 text-center col-lg-4">
+            <img src="http://loremflickr.com/768/432/cars?random=3" alt="" class="so">
+            <h2>Section #3</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi fugiat, voluptates quae placeat, minima nulla suscipit quas minus natus voluptas qui aliquam maxime consequuntur dolorum autem accusamus culpa ipsam dolor?</p>
+          </div>
         </div>
 
+        <div class="row">
+          <div class="col-md-8">
+            <h2>Description</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error minus officiis voluptate ex deleniti sequi, veniam adipisci dolorum at quos, est blanditiis consequuntur! Culpa aliquam commodi ducimus ipsam distinctio, eaque error officia asperiores tempore accusantium quasi ut impedit ratione tempora ab obcaecati alias molestias voluptas molestiae porro cumque mollitia earum laboriosam repudiandae doloremque. Saepe autem minima optio, laudantium impedit delectus eos facere accusamus sed amet perferendis inventore suscipit ipsum ducimus magnam dolore ex corporis assumenda?</p>
+          </div>
+          <div class="col-md-4">
+            <h4>&nbsp;</h4>
+            <p class="bg-primary text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa, repudiandae.</p>
+            <p class="bg-danger text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa, repudiandae.</p>
+            <p class="bg-info text-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Culpa, repudiandae.</p>
+          </div>
       </div>
+    </div>
 
     </div>
   <!-- js -->
