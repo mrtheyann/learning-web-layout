@@ -1,0 +1,47 @@
+$tablet: "(min-width: 768px) and (max-width: 1023px)"
+$desktop: "(min-width: 1024px)"
+
+body
+  font-family: "Ubuntu Condensed", sans-serif
+
+img
+  max-width: 100%
+
+.container-fluid
+  max-width: 1600px
+
+#page-wrapper > nav
+  background: #2358ea!important
+
+  a
+      color: #fff!important
+
+      &:hover
+        color: #000!important
+        background-color: transparent
+  button
+      background: #fff!important
+      color: #000!important
+
+      &:hover
+        color: #2358ea!important
+
+#page-wrapper > .container-fluid
+  margin-top: 30px
+
+#heading
+  padding: 30px
+  background-color: #eee
+
+p
+  font-size: 16px
+
+@media #{$tablet}
+  p
+    font-size: 18px
+  nav
+
+
+@media #{$desktop}
+  p
+    font-size: 20px
