@@ -1,0 +1,39 @@
+body {
+  font-family: "Ubuntu Condensed", sans-serif; }
+
+img {
+  max-width: 100%; }
+
+.container-fluid {
+  max-width: 1600px; }
+
+#page-wrapper > nav {
+  background: #2358ea !important; }
+  #page-wrapper > nav a {
+    color: #fff !important; }
+    #page-wrapper > nav a:hover {
+      color: #000 !important;
+      background-color: transparent; }
+  #page-wrapper > nav button {
+    background: #fff !important;
+    color: #000 !important; }
+    #page-wrapper > nav button:hover {
+      color: #2358ea !important; }
+
+#page-wrapper > .container-fluid {
+  margin-top: 30px; }
+
+#heading {
+  padding: 30px;
+  background-color: #eee; }
+
+p {
+  font-size: 16px; }
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  p {
+    font-size: 18px; } }
+
+@media (min-width: 1024px) {
+  p {
+    font-size: 20px; } }
