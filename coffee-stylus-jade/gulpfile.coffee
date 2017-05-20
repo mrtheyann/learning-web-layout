@@ -1,7 +1,17 @@
+#Basic
 gulp = require 'gulp'
 connect = require 'gulp-connect'
 jade = require 'gulp-jade'
 stylus = require 'gulp-stylus'
+#-----------------------------
+
+#External
+#-----------------------------
+coffee = require 'gulp-coffee'
+uglify = require 'gulp-uglify'
+clean = require 'gulp-clean'
+rjs = require 'gulp-requirejs'
+#-----------------------------
 
 gulp.task 'connect', ->
   connect.server
@@ -20,6 +30,12 @@ gulp.task 'stylus', ->
     .pipe stylus set: ['compress']
     .pipe gulp.dest 'dist/css'
     .pipe do connect.reload
+
+gulp.task 'coffee', ->
+  gulp.src 'coffee/*.coffee'
+    .pipe do coffee
+    .pipe gulp.dest 'js'
+
 
 gulp.task 'watch', ->
   gulp.watch 'jade/*.jade', ['jade']
