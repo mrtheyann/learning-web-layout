@@ -1,5 +1,5 @@
 (function() {
-  var paper, pathArray, style, updatePath;
+  var paper, path, pathArray, style;
 
   paper = Snap(800, 400);
 
@@ -8,39 +8,26 @@
   style = {
     fill: '#387',
     stroke: '#aaa',
-    strokeWidth: '5'
+    strokeWidth: 5
   };
+
+  path = paper.path("").attr({
+    stroke: '#222',
+    fill: 'transparent',
+    strokeWidth: 3
+  });
 
   pathArray = [];
 
-  updatePath = function() {
-    var first, i, len, node, pathString, ref;
-    first = pathArray[0];
-    pathString = "M " + first.x + ", " + first.y;
-    ref = pathArray.slice(1);
-    for (i = 0, len = ref.length; i < len; i++) {
-      node = ref[i];
-      pathString += "L " + node.x + ", " + node.y;
-    }
-    return path.attr({
-      d: pathString
-    });
-  };
-
   paper.click(function(e) {
+    var coords, pathString;
     if (e.target.tagName === 'svg') {
-      paper.circle(e.offsetX, e.offsetY, 15).data('i', pathArray.length).attr(style).drag(dx, dy, x, y)(function() {
-        var currentNode;
-        return this.attr({
-          cx: x,
-          cy: y
-        }, currentNode = pathArray[this.data('i')], currentNode.x = x, currentNode.y = y, updatePath());
+      paper.circle(e.offsetX, e.offsetY, 15).attr(style).drag();
+      pathString = path.attr('d');
+      coords = e.offsetX + "," + e.offsetY;
+      return path.attr({
+        d: pathString ? pathString + ("L " + coords + " ") : "M " + coords
       });
-      pathArray.push({
-        x: e.offsetX,
-        y: e.offsetY
-      });
-      return updatePath();
     }
   });
 
