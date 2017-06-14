@@ -7,7 +7,7 @@
 
   style = {
     fill: '#387',
-    stroke: '#aaa',
+    stroke: '#222',
     strokeWidth: 5
   };
 
@@ -23,12 +23,10 @@
     var first, i, len, node, pathString, ref;
     first = pathArray[0];
     pathString = "M " + first.x + "," + first.y;
-    console.log(pathString);
     ref = pathArray.slice(1);
     for (i = 0, len = ref.length; i < len; i++) {
       node = ref[i];
       pathString += "L " + node.x + "," + node.y;
-      console.log(pathString);
     }
     return path.attr({
       "d": pathString
@@ -37,7 +35,15 @@
 
   paper.click(function(e) {
     if (e.target.tagName === 'svg') {
-      paper.circle(e.offsetX, e.offsetY, 15).attr(style).data('i', pathArray.length).drag(function(dx, dy, x, y) {
+      paper.circle(e.offsetX, e.offsetY, 15).attr(style).data('i', pathArray.length).mouseover(function() {
+        return this.stop().animate({
+          r: 25
+        }, 1000, mina.elastic);
+      }).mouseout(function() {
+        return this.stop().animate({
+          r: 15
+        }, 300, mina.elasticinout);
+      }).drag(function(dx, dy, x, y) {
         var currentNode;
         this.attr({
           cx: x,
