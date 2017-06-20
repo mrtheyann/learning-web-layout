@@ -6,7 +6,7 @@
 #=============================================
 
 polarToCartesian = (cx, cy, r, angle) ->
-  angle = (angle - 90) * Math.Pi / 180 # Degrees to radians
+  angle = (angle - 90) * Math.PI / 180 # Degrees to radians
   x: cx + r * Math.cos angle
   y: cy + r * Math.sin angle
 
@@ -116,8 +116,9 @@ gui = new GUI [
 ]
 
 gui.paper
-  .path describeArc 200, 200, 1200, 0, 45
+  .path describeArc 200, 200, 120, 0, 45
   .attr
     fill: 'transparent'
     stroke: '#fff'
     strokeWidth: 4
+console.log(gui.paper)
