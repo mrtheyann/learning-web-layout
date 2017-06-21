@@ -10,17 +10,22 @@ polarToCartesian = (cx, cy, r, angle) ->
   x: cx + r * Math.cos angle
   y: cy + r * Math.sin angle
 
-describeArc = (x, y, r, startAngle, endAngle) ->
+describeArc = (x, y, r, startAngle, endAngle, continueLine) ->
   start = polarToCartesian x, y, r, startAngle %= 360
   end = polarToCartesian x, y, r, endAngle %= 360
   large = Math.abs(endAngle - startAngle) >= 180
+  alter = endAngle > startAngle
   "
-  M#{start.x},#{start.y}
+  #{if continueLine then 'L' else 'M'}#{start.x},#{start.y}
   A#{r},#{r}, 0
   #{if large then 1 else 0},
-  1, #{end.x}, #{end.y}
+  #{if alter then 1 else 0}, #{end.x}, #{end.y}
   "
-
+describeSector = (x, y, r, r2, startAngle, endAngle) ->
+  "
+  #{describeArc x, y, r, startAngle, endAngle}
+  #{describeArc x, y, r2, endAngle, startAngle, true}Z
+  "
 
 #=============================================
 # GUI
@@ -116,7 +121,7 @@ gui = new GUI [
 ]
 
 gui.paper
-  .path describeArc 200, 200, 120, 0, 45
+  .path describeSector 200, 200, 120, 50, 0, 90
   .attr
     fill: 'transparent'
     stroke: '#fff'

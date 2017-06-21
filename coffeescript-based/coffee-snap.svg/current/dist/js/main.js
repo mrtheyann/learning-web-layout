@@ -1,5 +1,5 @@
 (function() {
-  var GUI, RadialNav, describeArc, gui, polarToCartesian;
+  var GUI, RadialNav, describeArc, describeSector, gui, polarToCartesian;
 
   polarToCartesian = function(cx, cy, r, angle) {
     angle = (angle - 90) * Math.PI / 180;
@@ -9,12 +9,17 @@
     };
   };
 
-  describeArc = function(x, y, r, startAngle, endAngle) {
-    var end, large, start;
+  describeArc = function(x, y, r, startAngle, endAngle, continueLine) {
+    var alter, end, large, start;
     start = polarToCartesian(x, y, r, startAngle %= 360);
     end = polarToCartesian(x, y, r, endAngle %= 360);
     large = Math.abs(endAngle - startAngle) >= 180;
-    return "M" + start.x + "," + start.y + " A" + r + "," + r + ", 0 " + (large ? 1 : 0) + ", 1, " + end.x + ", " + end.y;
+    alter = endAngle > startAngle;
+    return "" + (continueLine ? 'L' : 'M') + start.x + "," + start.y + " A" + r + "," + r + ", 0 " + (large ? 1 : 0) + ", " + (alter ? 1 : 0) + ", " + end.x + ", " + end.y;
+  };
+
+  describeSector = function(x, y, r, r2, startAngle, endAngle) {
+    return (describeArc(x, y, r, startAngle, endAngle)) + " " + (describeArc(x, y, r2, endAngle, startAngle, true)) + "Z";
   };
 
   GUI = (function() {
@@ -101,7 +106,7 @@
     }
   ]);
 
-  gui.paper.path(describeArc(200, 200, 120, 0, 45)).attr({
+  gui.paper.path(describeSector(200, 200, 120, 50, 0, 90)).attr({
     fill: 'transparent',
     stroke: '#fff',
     strokeWidth: 4
