@@ -72,8 +72,12 @@ class RadialNav
 
   _sector: ->
     @area
-      .path # describeSector @c, @c, @r, @r2, 0, @angle
+      .path describeSector @c, @c, @r, @r2, 0, @angle
       .addClass 'radialnav-sector'
+
+  _button: (btn, sector) ->
+    @area
+      .g sector
 
   #==================
   # Public
@@ -81,8 +85,10 @@ class RadialNav
 
   updateButtons: (buttons) ->
     do @container.clear
-    #  for btn in buttons
-        # Create button
+    for btn, i in buttons
+      button = @_button btn, @_sector()
+      button.transform "r#{@angle * i},#{@c},#{@c}"
+      @container.add
 
 
 #=============================================
@@ -119,11 +125,3 @@ gui = new GUI [
     action: -> console.log 'Deleting...'
   }
 ]
-
-gui.paper
-  .path describeSector 200, 200, 120, 50, 0, 90
-  .attr
-    fill: 'transparent'
-    stroke: '#fff'
-    strokeWidth: 4
-console.log(gui.paper)

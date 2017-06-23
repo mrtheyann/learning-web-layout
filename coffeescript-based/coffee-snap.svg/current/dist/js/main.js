@@ -56,11 +56,24 @@
     }
 
     RadialNav.prototype._sector = function() {
-      return this.area.path.addClass('radialnav-sector');
+      return this.area.path(describeSector(this.c, this.c, this.r, this.r2, 0, this.angle)).addClass('radialnav-sector');
+    };
+
+    RadialNav.prototype._button = function(btn, sector) {
+      return this.area.g(sector);
     };
 
     RadialNav.prototype.updateButtons = function(buttons) {
-      return this.container.clear();
+      var btn, button, i, j, len, results;
+      this.container.clear();
+      results = [];
+      for (i = j = 0, len = buttons.length; j < len; i = ++j) {
+        btn = buttons[i];
+        button = this._button(btn, this._sector());
+        button.transform("r" + (this.angle * i) + "," + this.c + "," + this.c);
+        results.push(this.container.add);
+      }
+      return results;
     };
 
     return RadialNav;
@@ -105,13 +118,5 @@
       }
     }
   ]);
-
-  gui.paper.path(describeSector(200, 200, 120, 50, 0, 90)).attr({
-    fill: 'transparent',
-    stroke: '#fff',
-    strokeWidth: 4
-  });
-
-  console.log(gui.paper);
 
 }).call(this);
