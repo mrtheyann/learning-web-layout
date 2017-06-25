@@ -1,5 +1,7 @@
 (function() {
-  var GUI, RadialNav, describeArc, describeSector, gui, polarToCartesian;
+  var GUI, RadialNav, describeArc, describeSector, gui, iconsPath, polarToCartesian;
+
+  iconsPath = 'icons.svg';
 
   polarToCartesian = function(cx, cy, r, angle) {
     angle = (angle - 90) * Math.PI / 180;
@@ -25,8 +27,12 @@
   GUI = (function() {
     function GUI(buttons) {
       this.paper = Snap(window.innerWidth, window.innerHeight);
-      this.nav = new RadialNav(this.paper, buttons);
-      this._bindEvents();
+      Snap.load(iconsPath, (function(_this) {
+        return function(icons) {
+          _this.nav = new RadialNav(_this.paper, buttons, icons);
+          return _this._bindEvents();
+        };
+      })(this));
     }
 
     GUI.prototype._bindEvents = function() {
@@ -45,31 +51,37 @@
   })();
 
   RadialNav = (function() {
-    function RadialNav(paper, buttons) {
+    function RadialNav(paper, buttons, icons) {
       this.area = paper.svg(0, 0, this.size = 500, this.size).addClass('radialnav');
       this.c = this.size / 2;
       this.r = this.size * .25;
       this.r2 = this.r * .35;
       this.angle = 360 / buttons.length;
       this.container = this.area.g();
-      this.updateButtons(buttons);
+      this.updateButtons(buttons, icons);
     }
 
     RadialNav.prototype._sector = function() {
       return this.area.path(describeSector(this.c, this.c, this.r, this.r2, 0, this.angle)).addClass('radialnav-sector');
     };
 
-    RadialNav.prototype._button = function(btn, sector) {
-      return this.area.g(sector);
+    RadialNav.prototype._icon = function(btn, icons) {
+      var icon;
+      icon = icons.select("#" + btn.icon).addClass('radialnav-icon');
+      return icon.transform("T" + this.c + ", " + (this.c - this.r + this.r2 - 20) + " R" + (this.angle / 2) + ", " + this.c + ", " + this.c + "S.7");
     };
 
-    RadialNav.prototype.updateButtons = function(buttons) {
+    RadialNav.prototype._button = function(btn, sector, icon) {
+      return this.area.g(sector, icon);
+    };
+
+    RadialNav.prototype.updateButtons = function(buttons, icons) {
       var btn, button, i, j, len, results;
       this.container.clear();
       results = [];
       for (i = j = 0, len = buttons.length; j < len; i = ++j) {
         btn = buttons[i];
-        button = this._button(btn, this._sector());
+        button = this._button(btn, this._sector(), this._icon(btn, icons));
         button.transform("r" + (this.angle * i) + "," + this.c + "," + this.c);
         results.push(this.container.add);
       }
