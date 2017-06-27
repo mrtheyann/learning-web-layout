@@ -22,3 +22,9 @@ body {
   stroke-width: 1;
   transition: all .4s;
 }
+
+.radialnav-icon {
+  pointer-events: none;
+  fill: #eee;
+  transition: all .4s;
+}
