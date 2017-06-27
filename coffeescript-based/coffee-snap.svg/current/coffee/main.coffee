@@ -80,8 +80,9 @@ class RadialNav
     icon = icons
       .select "##{btn.icon}"
       .addClass 'radialnav-icon'
+    bbox = do icon.getBBox
     icon.transform "
-    T#{@c}, #{@c - @r + @r2 - 20}
+    T#{@c - bbox.x - bbox.width / 2}, #{@c - @r + @r2 - bbox.y - bbox.height / 2 - 5}
     R#{@angle / 2}, #{@c}, #{@c}S.7
     "
 

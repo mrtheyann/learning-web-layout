@@ -66,9 +66,10 @@
     };
 
     RadialNav.prototype._icon = function(btn, icons) {
-      var icon;
+      var bbox, icon;
       icon = icons.select("#" + btn.icon).addClass('radialnav-icon');
-      return icon.transform("T" + this.c + ", " + (this.c - this.r + this.r2 - 20) + " R" + (this.angle / 2) + ", " + this.c + ", " + this.c + "S.7");
+      bbox = icon.getBBox();
+      return icon.transform("T" + (this.c - bbox.x - bbox.width / 2) + ", " + (this.c - this.r + this.r2 - bbox.y - bbox.height / 2 - 5) + " R" + (this.angle / 2) + ", " + this.c + ", " + this.c + "S.7");
     };
 
     RadialNav.prototype._button = function(btn, sector, icon) {
