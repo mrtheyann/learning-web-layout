@@ -74,7 +74,7 @@
 
     RadialNav.prototype._hint = function(btn) {
       var hint;
-      hint = this.area.text(0, 0, btn.icon).addClass('radialnav-hint').attr({
+      hint = this.area.text(0, 0, btn.icon).addClass('radialnav-hint hide').attr({
         textpath: describeArc(this.c, this.c, this.r, 0, this.angle)
       });
       hint.select('*').attr({

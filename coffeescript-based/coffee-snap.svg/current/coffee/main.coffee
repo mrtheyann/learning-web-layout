@@ -89,7 +89,7 @@ class RadialNav
   _hint: (btn) ->
     hint = @area
       .text 0, 0, btn.icon
-      .addClass 'radialnav-hint'
+      .addClass 'radialnav-hint hide'
       .attr textpath: describeArc @c, @c, @r, 0, @angle
     hint.select('*').attr startOffset: '50%'
     hint
