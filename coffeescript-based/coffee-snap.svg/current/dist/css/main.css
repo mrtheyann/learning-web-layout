@@ -10,10 +10,16 @@ body {
 }
 
 body {
+  -webkit-font-smoothing: antialiased;
   background: url(../bg.jpg);
   background-position: center;
   background-size: cover;
   overflow: hidden;
+}
+.radialnav {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 }
 
 .radialnav-sector {
@@ -26,5 +32,13 @@ body {
 .radialnav-icon {
   pointer-events: none;
   fill: #eee;
+  transition: all .4s;
+}
+
+.radialnav-hint {
+  fill: #eee;
+  font: bold .95em 'PT Sans', Arial, sans-serif;
+  text-anchor: middle;
+  text-transform: uppercase;
   transition: all .4s;
 }
