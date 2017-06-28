@@ -72,8 +72,19 @@
       return icon.transform("T" + (this.c - bbox.x - bbox.width / 2) + ", " + (this.c - this.r + this.r2 - bbox.y - bbox.height / 2 - 5) + " R" + (this.angle / 2) + ", " + this.c + ", " + this.c + "S.7");
     };
 
-    RadialNav.prototype._button = function(btn, sector, icon) {
-      return this.area.g(sector, icon);
+    RadialNav.prototype._hint = function(btn) {
+      var hint;
+      hint = this.area.text(0, 0, btn.icon).addClass('radialnav-hint').attr({
+        textpath: describeArc(this.c, this.c, this.r, 0, this.angle)
+      });
+      hint.select('*').attr({
+        startOffset: '50%'
+      });
+      return hint;
+    };
+
+    RadialNav.prototype._button = function(btn, sector, icon, hint) {
+      return this.area.g(sector, icon, hint);
     };
 
     RadialNav.prototype.updateButtons = function(buttons, icons) {
@@ -82,9 +93,9 @@
       results = [];
       for (i = j = 0, len = buttons.length; j < len; i = ++j) {
         btn = buttons[i];
-        button = this._button(btn, this._sector(), this._icon(btn, icons));
+        button = this._button(btn, this._sector(), this._icon(btn, icons), this._hint(btn));
         button.transform("r" + (this.angle * i) + "," + this.c + "," + this.c);
-        results.push(this.container.add);
+        results.push(this.container.add(button));
       }
       return results;
     };

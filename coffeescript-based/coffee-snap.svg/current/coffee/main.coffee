@@ -86,9 +86,17 @@ class RadialNav
     R#{@angle / 2}, #{@c}, #{@c}S.7
     "
 
-  _button: (btn, sector, icon) ->
+  _hint: (btn) ->
+    hint = @area
+      .text 0, 0, btn.icon
+      .addClass 'radialnav-hint'
+      .attr textpath: describeArc @c, @c, @r, 0, @angle
+    hint.select('*').attr startOffset: '50%'
+    hint
+
+  _button: (btn, sector, icon, hint) ->
     @area
-      .g sector, icon
+      .g sector, icon, hint
 
   #==================
   # Public
@@ -97,9 +105,9 @@ class RadialNav
   updateButtons: (buttons, icons) ->
     do @container.clear
     for btn, i in buttons
-      button = @_button btn, @_sector(), @_icon btn, icons
+      button = @_button btn, @_sector(), @_icon(btn, icons), @_hint(btn)
       button.transform "r#{@angle * i},#{@c},#{@c}"
-      @container.add
+      @container.add button
 
 
 #=============================================
