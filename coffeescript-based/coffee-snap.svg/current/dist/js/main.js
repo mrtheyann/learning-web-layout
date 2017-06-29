@@ -3,6 +3,12 @@
 
   iconsPath = 'icons.svg';
 
+  Snap.plugin(function(Snap, Element) {
+    return Element.prototype.hover = function(f_in, f_out, s_in, s_out) {
+      return this.mouseover(f_in, s_in).mouseout(f_out || f_in, s_out || s_in);
+    };
+  });
+
   polarToCartesian = function(cx, cy, r, angle) {
     angle = (angle - 90) * Math.PI / 180;
     return {
@@ -84,7 +90,16 @@
     };
 
     RadialNav.prototype._button = function(btn, sector, icon, hint) {
-      return this.area.g(sector, icon, hint);
+      return this.area.g(sector, icon, hint).hover(function() {
+        var el, j, len, ref, results;
+        ref = [this[0], this[1], this[2]];
+        results = [];
+        for (j = 0, len = ref.length; j < len; j++) {
+          el = ref[j];
+          results.push(el.toggleClass('active'));
+        }
+        return results;
+      });
     };
 
     RadialNav.prototype.updateButtons = function(buttons, icons) {

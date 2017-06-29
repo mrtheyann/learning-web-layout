@@ -5,6 +5,11 @@ iconsPath = 'icons.svg'
 # Util
 #=============================================
 
+Snap.plugin (Snap, Element) ->
+  Element::hover = (f_in, f_out, s_in, s_out) ->
+    @mouseover f_in, s_in
+      .mouseout f_out or f_in, s_out or s_in
+
 polarToCartesian = (cx, cy, r, angle) ->
   angle = (angle - 90) * Math.PI / 180 # Degrees to radians
   x: cx + r * Math.cos angle
@@ -97,6 +102,7 @@ class RadialNav
   _button: (btn, sector, icon, hint) ->
     @area
       .g sector, icon, hint
+      .hover -> el.toggleClass 'active' for el in [@[0], @[1], @[2]]
 
   #==================
   # Public
