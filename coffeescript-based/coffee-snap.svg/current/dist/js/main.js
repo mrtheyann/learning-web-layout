@@ -1,5 +1,5 @@
 (function() {
-  var GUI, RadialNav, describeArc, describeSector, gui, iconsPath, polarToCartesian;
+  var GUI, RadialNav, animate, describeArc, describeSector, gui, iconsPath, polarToCartesian;
 
   iconsPath = 'icons.svg';
 
@@ -28,6 +28,14 @@
 
   describeSector = function(x, y, r, r2, startAngle, endAngle) {
     return (describeArc(x, y, r, startAngle, endAngle)) + " " + (describeArc(x, y, r2, endAngle, startAngle, true)) + "Z";
+  };
+
+  animate = function(obj, index, start, end, duration, easing, fn, cb) {
+    var ref;
+    if ((ref = (obj.animation != null ? obj.animation : obj.animation = [])[index]) != null) {
+      ref.stop();
+    }
+    return obj.animation[index] = Snap.animate(start, end, fn, duration, easing, cb);
   };
 
   GUI = (function() {
@@ -67,6 +75,16 @@
       this.updateButtons(buttons, icons);
     }
 
+    RadialNav.prototype._animateButtonHover = function(button, start, end, duration, easing, cb) {
+      return animate(button, 1, start, end, duration, easing, ((function(_this) {
+        return function(val) {
+          return button[0].attr({
+            d: describeSector(_this.c, _this.c, _this.r - val * 10, _this.r2, 0, _this.angle)
+          });
+        };
+      })(this)), cb);
+    };
+
     RadialNav.prototype._sector = function() {
       return this.area.path(describeSector(this.c, this.c, this.r, this.r2, 0, this.angle)).addClass('radialnav-sector');
     };
@@ -99,7 +117,22 @@
           results.push(el.toggleClass('active'));
         }
         return results;
-      });
+      }).hover(this._buttonOver(this), this._buttonOut(this));
+    };
+
+    RadialNav.prototype._buttonOver = function(nav) {
+      return function() {
+        nav._animateButtonHover(this, 0, 1, 200, mina.easeinout);
+        return this[2].removeClass('hide');
+      };
+    };
+
+    RadialNav.prototype._buttonOut = function(nav) {
+      return function() {
+        return nav._animateButtonHover(this, 1, 0, 150, mina.elastic, (function() {
+          return this.addClass('hide');
+        }).bind(this[2]));
+      };
     };
 
     RadialNav.prototype.updateButtons = function(buttons, icons) {

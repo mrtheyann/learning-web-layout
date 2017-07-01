@@ -32,6 +32,12 @@ describeSector = (x, y, r, r2, startAngle, endAngle) ->
   #{describeArc x, y, r2, endAngle, startAngle, true}Z
   "
 
+animate = (obj, index, start, end, duration, easing, fn, cb) ->
+  do (obj.animation ?= [])[index]?.stop
+  obj.animation[index] =  Snap.animate start, end, fn, duration, easing, cb
+
+
+
 #=============================================
 # GUI
 #=============================================
@@ -76,6 +82,11 @@ class RadialNav
   # Private
   #==================
 
+  _animateButtonHover: (button, start, end, duration, easing, cb) ->
+    animate button, 1, start, end, duration, easing, ((val) =>
+      button[0].attr d: describeSector @c, @c, @r - val * 10, @r2, 0, @angle
+      ), cb
+
   _sector: ->
     @area
       .path describeSector @c, @c, @r, @r2, 0, @angle
@@ -103,6 +114,15 @@ class RadialNav
     @area
       .g sector, icon, hint
       .hover -> el.toggleClass 'active' for el in [@[0], @[1], @[2]]
+      .hover @_buttonOver(@), @_buttonOut(@)
+
+  _buttonOver: (nav) -> ->
+    nav._animateButtonHover @, 0, 1, 200, mina.easeinout
+    @[2].removeClass 'hide'
+
+  _buttonOut: (nav) -> ->
+    nav._animateButtonHover @, 1, 0, 150, mina.elastic, (->
+      @addClass 'hide').bind @[2]
 
   #==================
   # Public
