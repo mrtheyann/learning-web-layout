@@ -59,6 +59,9 @@ class GUI
         width: window.innerWidth
         height: window.innerHeight
 
+    @paper.node.addEventListener 'mousedown', @nav.show.bind @nav
+    @paper.node.addEventListener 'mouseup', @nav.hide.bind @nav
+
 
 #=============================================
 # RadialNav
@@ -69,12 +72,14 @@ class RadialNav
     @area = paper
       .svg 0, 0, @size = 500, @size
       .addClass 'radialnav'
-    @c = @size / 2 #Center
+    @c = @size / 2 # Center
     @r = @size * .25 # Outer Radius
     @r2 = @r * .35 # Inner Radius
     @angle = 360 / buttons.length
+    @animDuration = 300 # ms
 
     @container = do @area.g
+    @container.transform "s0"
 
     @updateButtons buttons, icons
 
@@ -82,9 +87,14 @@ class RadialNav
   # Private
   #==================
 
+  _animateContainer: (start, end, duration, easing) ->
+    animate @, 0, start, end, duration, easing, (val) =>
+      @container.transform "s#{val}, #{val}, #{@c}, #{@c}"
+
   _animateButtonHover: (button, start, end, duration, easing, cb) ->
     animate button, 1, start, end, duration, easing, ((val) =>
       button[0].attr d: describeSector @c, @c, @r - val * 10, @r2, 0, @angle
+      button[2].transform "s#{1.1 - val * .1}, #{1.1 - val * .1}, #{@c}, #{@c}"
       ), cb
 
   _sector: ->
@@ -121,7 +131,7 @@ class RadialNav
     @[2].removeClass 'hide'
 
   _buttonOut: (nav) -> ->
-    nav._animateButtonHover @, 1, 0, 150, mina.elastic, (->
+    nav._animateButtonHover @, 1, 0, 2000, mina.elastic, (->
       @addClass 'hide').bind @[2]
 
   #==================
@@ -135,6 +145,12 @@ class RadialNav
       button.transform "r#{@angle * i},#{@c},#{@c}"
       @container.add button
 
+  show: (e) ->
+    @area.attr x: e.clientX - @c, y: e.clientY - @c
+    @_animateContainer 0, 1, @animDuration * 8, mina.elastic
+
+  hide: ->
+    @_animateContainer 1, 0, @animDuration, mina.easeinout
 
 #=============================================
 # Test

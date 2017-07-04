@@ -50,7 +50,7 @@
     }
 
     GUI.prototype._bindEvents = function() {
-      return window.addEventListener('resize', (function(_this) {
+      window.addEventListener('resize', (function(_this) {
         return function() {
           return _this.paper.attr({
             width: window.innerWidth,
@@ -58,6 +58,8 @@
           });
         };
       })(this));
+      this.paper.node.addEventListener('mousedown', this.nav.show.bind(this.nav));
+      return this.paper.node.addEventListener('mouseup', this.nav.hide.bind(this.nav));
     };
 
     return GUI;
@@ -71,16 +73,27 @@
       this.r = this.size * .25;
       this.r2 = this.r * .35;
       this.angle = 360 / buttons.length;
+      this.animDuration = 300;
       this.container = this.area.g();
+      this.container.transform("s0");
       this.updateButtons(buttons, icons);
     }
+
+    RadialNav.prototype._animateContainer = function(start, end, duration, easing) {
+      return animate(this, 0, start, end, duration, easing, (function(_this) {
+        return function(val) {
+          return _this.container.transform("s" + val + ", " + val + ", " + _this.c + ", " + _this.c);
+        };
+      })(this));
+    };
 
     RadialNav.prototype._animateButtonHover = function(button, start, end, duration, easing, cb) {
       return animate(button, 1, start, end, duration, easing, ((function(_this) {
         return function(val) {
-          return button[0].attr({
+          button[0].attr({
             d: describeSector(_this.c, _this.c, _this.r - val * 10, _this.r2, 0, _this.angle)
           });
+          return button[2].transform("s" + (1.1 - val * .1) + ", " + (1.1 - val * .1) + ", " + _this.c + ", " + _this.c);
         };
       })(this)), cb);
     };
@@ -129,7 +142,7 @@
 
     RadialNav.prototype._buttonOut = function(nav) {
       return function() {
-        return nav._animateButtonHover(this, 1, 0, 150, mina.elastic, (function() {
+        return nav._animateButtonHover(this, 1, 0, 2000, mina.elastic, (function() {
           return this.addClass('hide');
         }).bind(this[2]));
       };
@@ -146,6 +159,18 @@
         results.push(this.container.add(button));
       }
       return results;
+    };
+
+    RadialNav.prototype.show = function(e) {
+      this.area.attr({
+        x: e.clientX - this.c,
+        y: e.clientY - this.c
+      });
+      return this._animateContainer(0, 1, this.animDuration * 8, mina.elastic);
+    };
+
+    RadialNav.prototype.hide = function() {
+      return this._animateContainer(1, 0, this.animDuration, mina.easeinout);
     };
 
     return RadialNav;
