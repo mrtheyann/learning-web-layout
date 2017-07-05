@@ -1,5 +1,5 @@
 (function() {
-  var GUI, RadialNav, animate, describeArc, describeSector, gui, iconsPath, polarToCartesian;
+  var GUI, RadialNav, animate, describeArc, describeSector, gui, iconsPath, polarToCartesian, random, toggleContext;
 
   iconsPath = 'icons.svg';
 
@@ -30,12 +30,20 @@
     return (describeArc(x, y, r, startAngle, endAngle)) + " " + (describeArc(x, y, r2, endAngle, startAngle, true)) + "Z";
   };
 
+  random = function(min, max) {
+    return Math.random() * (max - min) + min;
+  };
+
   animate = function(obj, index, start, end, duration, easing, fn, cb) {
     var ref;
     if ((ref = (obj.animation != null ? obj.animation : obj.animation = [])[index]) != null) {
       ref.stop();
     }
     return obj.animation[index] = Snap.animate(start, end, fn, duration, easing, cb);
+  };
+
+  toggleContext = function() {
+    return document.body.classList.toggle('context');
   };
 
   GUI = (function() {
@@ -82,9 +90,29 @@
     RadialNav.prototype._animateContainer = function(start, end, duration, easing) {
       return animate(this, 0, start, end, duration, easing, (function(_this) {
         return function(val) {
-          return _this.container.transform("s" + val + ", " + val + ", " + _this.c + ", " + _this.c);
+          return _this.container.transform("r" + (90 - 90 * val) + ", " + _this.c + ", " + _this.c + "s" + val + ", " + val + ", " + _this.c + ", " + _this.c);
         };
       })(this));
+    };
+
+    RadialNav.prototype._animateButtons = function(start, end, min, max, easing) {
+      var anim, el, i, ref, results;
+      anim = (function(_this) {
+        return function(i, el) {
+          return animate(el, 0, start, end, random(min, max), easing, function(val) {
+            return el.transform("r" + (_this.angle * i) + ", " + _this.c + ", " + _this.c + " s" + val + ", " + val + ", " + _this.c + ", " + _this.c);
+          });
+        };
+      })(this);
+      ref = this.container;
+      results = [];
+      for (i in ref) {
+        el = ref[i];
+        if (!Number.isNaN(+i)) {
+          results.push(anim(i, el));
+        }
+      }
+      return results;
     };
 
     RadialNav.prototype._animateButtonHover = function(button, start, end, duration, easing, cb) {
@@ -121,7 +149,10 @@
     };
 
     RadialNav.prototype._button = function(btn, sector, icon, hint) {
-      return this.area.g(sector, icon, hint).hover(function() {
+      return this.area.g(sector, icon, hint).data('cb', btn.action).mouseup(function() {
+        var base;
+        return typeof (base = this.data('cb')) === "function" ? base() : void 0;
+      }).hover(function() {
         var el, j, len, ref, results;
         ref = [this[0], this[1], this[2]];
         results = [];
@@ -149,14 +180,12 @@
     };
 
     RadialNav.prototype.updateButtons = function(buttons, icons) {
-      var btn, button, i, j, len, results;
+      var btn, i, j, len, results;
       this.container.clear();
       results = [];
       for (i = j = 0, len = buttons.length; j < len; i = ++j) {
         btn = buttons[i];
-        button = this._button(btn, this._sector(), this._icon(btn, icons), this._hint(btn));
-        button.transform("r" + (this.angle * i) + "," + this.c + "," + this.c);
-        results.push(this.container.add(button));
+        results.push(this.container.add(this._button(btn, this._sector(), this._icon(btn, icons), this._hint(btn))));
       }
       return results;
     };
@@ -166,11 +195,15 @@
         x: e.clientX - this.c,
         y: e.clientY - this.c
       });
-      return this._animateContainer(0, 1, this.animDuration * 8, mina.elastic);
+      toggleContext();
+      this._animateContainer(0, 1, this.animDuration * 8, mina.elastic);
+      return this._animateButtons(0, 1, this.animDuration, this.animDuration * 8, mina.elastic);
     };
 
     RadialNav.prototype.hide = function() {
-      return this._animateContainer(1, 0, this.animDuration, mina.easeinout);
+      toggleContext();
+      this._animateContainer(1, 0, this.animDuration, mina.easeinout);
+      return this._animateButtons(1, 0, this.animDuration, this.animDuration, mina.easeinout);
     };
 
     return RadialNav;
@@ -181,39 +214,41 @@
     {
       icon: 'pin',
       action: function() {
-        return console.log('Pinning...');
+        return humane.log('Pinning...');
       }
     }, {
       icon: 'search',
       action: function() {
-        return console.log('Opening Search...');
+        return humane.log('Opening Search...');
       }
     }, {
       icon: 'cloud',
       action: function() {
-        return console.log('Connecting to Cloud...');
+        return humane.log('Connecting to Cloud...');
       }
     }, {
       icon: 'settings',
       action: function() {
-        return console.log('Opening Settings...');
+        return humane.log('Opening Settings...');
       }
     }, {
       icon: 'rewind',
       action: function() {
-        return console.log('Rewinding...');
+        return humane.log('Rewinding...');
       }
     }, {
       icon: 'preview',
       action: function() {
-        return console.log('Preview Activated...');
+        return humane.log('Preview Activated...');
       }
     }, {
       icon: 'delete',
       action: function() {
-        return console.log('Deleting...');
+        return humane.log('Deleting...');
       }
     }
   ]);
+
+  humane.timeout = 1000;
 
 }).call(this);

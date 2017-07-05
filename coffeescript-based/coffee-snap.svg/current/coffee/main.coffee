@@ -32,11 +32,13 @@ describeSector = (x, y, r, r2, startAngle, endAngle) ->
   #{describeArc x, y, r2, endAngle, startAngle, true}Z
   "
 
+random = (min, max) -> Math.random() * (max - min) + min
+
 animate = (obj, index, start, end, duration, easing, fn, cb) ->
   do (obj.animation ?= [])[index]?.stop
   obj.animation[index] =  Snap.animate start, end, fn, duration, easing, cb
 
-
+toggleContext = -> document.body.classList.toggle 'context'
 
 #=============================================
 # GUI
@@ -89,7 +91,13 @@ class RadialNav
 
   _animateContainer: (start, end, duration, easing) ->
     animate @, 0, start, end, duration, easing, (val) =>
-      @container.transform "s#{val}, #{val}, #{@c}, #{@c}"
+      @container.transform "r#{90 - 90 * val}, #{@c}, #{@c}s#{val}, #{val}, #{@c}, #{@c}"
+
+  _animateButtons: (start, end, min, max, easing) ->
+    anim = (i, el) =>
+      animate el, 0, start, end, random(min, max), easing, (val) =>
+        el.transform "r#{@angle * i}, #{@c}, #{@c} s#{val}, #{val}, #{@c}, #{@c}"
+    anim i, el for i, el of @container when not Number.isNaN +i
 
   _animateButtonHover: (button, start, end, duration, easing, cb) ->
     animate button, 1, start, end, duration, easing, ((val) =>
@@ -123,6 +131,8 @@ class RadialNav
   _button: (btn, sector, icon, hint) ->
     @area
       .g sector, icon, hint
+      .data 'cb', btn.action
+      .mouseup -> @data('cb')?()
       .hover -> el.toggleClass 'active' for el in [@[0], @[1], @[2]]
       .hover @_buttonOver(@), @_buttonOut(@)
 
@@ -141,16 +151,18 @@ class RadialNav
   updateButtons: (buttons, icons) ->
     do @container.clear
     for btn, i in buttons
-      button = @_button btn, @_sector(), @_icon(btn, icons), @_hint(btn)
-      button.transform "r#{@angle * i},#{@c},#{@c}"
-      @container.add button
+      @container.add @_button btn, @_sector(), @_icon(btn, icons), @_hint(btn)
 
   show: (e) ->
     @area.attr x: e.clientX - @c, y: e.clientY - @c
+    do toggleContext
     @_animateContainer 0, 1, @animDuration * 8, mina.elastic
+    @_animateButtons 0, 1, @animDuration, @animDuration * 8, mina.elastic
 
   hide: ->
+    do toggleContext
     @_animateContainer 1, 0, @animDuration, mina.easeinout
+    @_animateButtons 1, 0, @animDuration, @animDuration, mina.easeinout
 
 #=============================================
 # Test
@@ -159,30 +171,32 @@ class RadialNav
 gui = new GUI [
   {
     icon: 'pin'
-    action: -> console.log 'Pinning...'
+    action: -> humane.log 'Pinning...'
   }
   {
     icon: 'search'
-    action: -> console.log 'Opening Search...'
+    action: -> humane.log 'Opening Search...'
   }
   {
     icon: 'cloud'
-    action: -> console.log 'Connecting to Cloud...'
+    action: -> humane.log 'Connecting to Cloud...'
   }
   {
     icon: 'settings'
-    action: -> console.log 'Opening Settings...'
+    action: -> humane.log 'Opening Settings...'
   }
   {
     icon: 'rewind'
-    action: -> console.log 'Rewinding...'
+    action: -> humane.log 'Rewinding...'
   }
   {
     icon: 'preview'
-    action: -> console.log 'Preview Activated...'
+    action: -> humane.log 'Preview Activated...'
   }
   {
     icon: 'delete'
-    action: -> console.log 'Deleting...'
+    action: -> humane.log 'Deleting...'
   }
 ]
+
+humane.timeout = 1000 # ms
