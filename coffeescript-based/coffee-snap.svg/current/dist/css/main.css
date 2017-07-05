@@ -18,6 +18,10 @@ body {
   cursor: pointer;
 }
 
+body.context {
+  cursor: crosshair;
+}
+
 .hide {
   display: none;
 }
