@@ -5,13 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.0/css/bulma.css">
+  <link rel="stylesheet" href="css/main.css">
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
   <title>Location Finder</title>
-  <style>
-    .icon-remove, .icon-check {
-      display: none;
-    }
-  </style>
+
 </head>
 <body>
   <section class="hero hero-body is-dark container">
@@ -21,7 +18,7 @@
       <div class="field">
         <label class="label">Username</label>
         <div class="control has-icons-left has-icons-right">
-          <input class="input zip is-large" type="text" placeholder="Enter Zipcode">
+          <input class="input zip is-large" type="text" placeholder="Enter Zipcode (e.g: 01913)">
           <span class="icon is-small is-left">
             <i class="fa fa-map-pin"></i>
           </span>
@@ -40,5 +37,7 @@
   <div class="container">
     <div id="output"></div>
   </div>
+
+  <script src="js/main.js" charset="utf-8"></script>
 </body>
 </html>
